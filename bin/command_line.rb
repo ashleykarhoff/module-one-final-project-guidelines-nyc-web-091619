@@ -1,12 +1,27 @@
 class CommandLine
     def greet
-        puts "What is your name?"
-        name = gets.chomp
-        puts "What month were you born?"
-        month = gets.chomp 
-        puts "What day were you born?"
-        day = gets.chomp 
+        prompt = TTY::Prompt.new
+        name = prompt.ask('What is your name?')
+        puts "Welcome, #{name}!"
+        sign = prompt.select("Choose your zodiac sign:", %w(Aquarius Pisces Aries Taurus Gemini Cancer Leo Virgo Libra Scorpio Sagittarius Capricorn))
+        puts "You've selected #{sign}"
 
-        User.new(name: name, month: month, day: day)
+        User.create(name: name, sign: sign)
+
+        navigate = prompt.select("Would you like to see your horoscope?", %w[yes no])
+
+        if navigate == 'yes'
+            show_horoscope
+        else
+            main_menu
+        end
     end
+
+    # def show_horoscope
+        
+    # end
+
+    # # def main_menu
+
+    # # end
 end

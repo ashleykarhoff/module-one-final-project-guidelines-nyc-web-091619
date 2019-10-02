@@ -1,30 +1,35 @@
 class CommandLine
+
+    def new_prompt
+        TTY::Prompt.new
+    end
+
     def greet
-
-        puts "*****************************************************"
-        puts "*                                                   *"
-        puts "*                 Welcome to Zodiac!                *"
-        puts "*                                                   *"
-        puts "*****************************************************"
+        # Print out a welcome message to the screen
+        puts "~ " * 32
+        puts "~                                                             ~"
+        puts "~                                                             ~"
+        puts "~                    Welcome to Zodiac! \u{1F319}                     ~"
+        puts "~                                                             ~"
+        puts "~    Enter your name and astrological sign to get started:    ~"
+        puts "~                                                             ~"
+        puts "~                                                             ~"
+        puts "~ " * 32
         puts ""
-        puts "Enter your name and astrological sign to get started:"
-        puts ""
-
-        prompt = TTY::Prompt.new
-        result = prompt.collect do 
+        
+        # Collect user input
+        result = new_prompt.collect do 
             key(:name).ask('What is your name?')
             key(:sign).select("Choose your zodiac sign:", %w(Aquarius Pisces Aries Taurus Gemini Cancer Leo Virgo Libra Scorpio Sagittarius Capricorn))
         end
 
+        # Create new DB user instance
         User.create(name: result[:name], sign: result[:sign])
+
     end
 
     def current_user
         User.last
-    end
-
-    def new_prompt
-        TTY::Prompt.new
     end
 
     def show_horoscope
@@ -35,12 +40,11 @@ class CommandLine
 
         # return's user's horoscope
         puts "Here is today's horoscope for #{current_user.sign}:"
-        puts "~" * 36
+        puts "~" * 40
         puts user_horoscope.horoscope
 
         # ask if they want to add to favorites
-        prompt = TTY::Prompt.new
-        result = prompt.select("Thank you for checking out today's horoscope! /n Would you like to save this horoscope to your favorites?", ['Yes I would!', 'No thanks..'])
+        result = new_prompt.select("Thank you for checking out today's horoscope! /n Would you like to save this horoscope to your favorites?", ['Yes I would!', 'No thanks..'])
 
         # Saves horoscope to favorites
         if result == "Yes I would!"
@@ -51,8 +55,7 @@ class CommandLine
     end
 
     def change_sign
-        prompt = TTY::Prompt.new
-        new_sign = prompt.select("Choose your new zodiac sign:", %w(Aquarius Pisces Aries Taurus Gemini Cancer Leo Virgo Libra Scorpio Sagittarius Capricorn))
+        new_sign = new_prompt.select("Choose your new zodiac sign:", %w(Aquarius Pisces Aries Taurus Gemini Cancer Leo Virgo Libra Scorpio Sagittarius Capricorn))
 
         user_id = User.last.id
         User.update(user_id, :sign => new_sign)
@@ -75,6 +78,7 @@ class CommandLine
             # Print out each horoscope
             horoscopes.each do |scope|
                 puts scope.horoscope
+                puts ""
                 puts "~" * 25
             end
         end
@@ -82,29 +86,26 @@ class CommandLine
 
     def homepage
         # Get current user
-        user = current_user
-        name = user.name
+        name = current_user.name
 
-        puts "*****************************************************"
-        puts "*                                                   *"
-        puts "*                 Welcome, #{name}!                 *"
-        puts "*                                                   *"
-        puts "*        This is your astrological homepage         *"
-        puts "*                                                   *"
-        puts "*        Select an option to get started...         *"
-        puts "*                                                   *"
-        puts "*****************************************************"
+        puts "~ " * 32
+        puts "~                                                             ~"
+        puts "Hi, #{name}!"
+        puts "~                                                             ~"
+        puts "~" + "  " * 7 + "\u{1F52E}   Welcome to Zodiac's Homepage  \u{1F52E}" + "  " * 7 + "~"
+        puts "~                                                             ~"
+        puts "~ " * 32
 
-        selection = new_prompt.select("", ["See today's horoscope", "My favorite horoscopes", "Change zodiac sign", "Delete account"])
+        selection = new_prompt.select("", ["See today's horoscope", "Learn about my sign", "My favorite horoscopes", "Change zodiac sign"])
 
         if selection == "See today's horoscope"
             show_horoscope
         elsif selection == "My favorite horoscopes"
             favorite_horoscopes
-        elsif selection == "Change zodiac sign"
-            change_sign
+        elsif selection == "Learn about my sign"
+            sign_info
         else
-            delete_user
+            change_sign 
         end
 
     end

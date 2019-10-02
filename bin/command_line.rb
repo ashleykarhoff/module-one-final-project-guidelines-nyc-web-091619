@@ -70,37 +70,48 @@ class CommandLine
         homepage
     end
 
-    def favorite_horoscopes
+    def find_favorites
         # Query favorites table to find user_ids matching our current user
-        user_favorites = Favorites.where(user_id: current_user.id)
+        Favorites.where(user_id: current_user.id)
+    end
 
+    def clear_favorite_horoscopes
+        find_favorites.each do |favorite|
+            Favorites.delete(find_favorites)
+        end
+    end
+
+    def favorite_horoscopes
         # If user hasn't saved any horoscopes, return an error message
-        if user_favorites.length == 0
+        if find_favorites.length == 0
             puts "You haven't saved any favorites yet!"
             homepage
         end
 
         # Iterate through our user's favorites and query the horoscope table
+        puts ""
         puts "\u{2728}  Here are your favorite horoscopes \u{2728}"
-        puts "~ " * 35 
 
-        user_favorites.each do |favorite|
+        find_favorites.each do |favorite|
             horoscopes = Horoscope.where(id: favorite.horoscope_id)
 
             # Print out each horoscope
             horoscopes.each do |scope|
-                puts "\u{1F52E}  " + scope.horoscope
-                puts ""
                 puts "~ " * 25
+                puts ""
+                puts "\u{1F52E}  " + scope.horoscope
                 puts ""
             end
         end
+        puts "~ " * 25
+
+        selection = new_prompt.select('', ["Go to homepage", "Clear Favorites"])
+
+        if selection == "Clear Favorites"
+            clear_favorite_horoscopes
+        end
 
         homepage
-    end
-
-    def sign_info
-
     end
 
     def homepage
@@ -124,7 +135,7 @@ class CommandLine
         elsif selection == "Learn about my sign"
             sign_info
         else
-            change_sign 
+            change_sign
         end
 
     end

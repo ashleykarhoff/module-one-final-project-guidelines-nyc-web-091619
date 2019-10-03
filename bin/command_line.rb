@@ -9,6 +9,7 @@ class CommandLine
         puts ""
         puts "\u{2728}  You've chosen the Zodiac sign, #{sign}. \u{2728}"
         puts ""
+        puts 
         sign
     end
 
@@ -45,6 +46,11 @@ class CommandLine
         Horoscope.all.find do |scope|
             scope.sign == current_user.sign
         end
+    end
+
+    def sign_info
+        puts "\u{2728}  Learn more about the #{current_user.sign} sign \u{2728}"
+        puts find_horoscope.description
     end
 
     def save_horoscope?
@@ -120,9 +126,7 @@ class CommandLine
 
         puts "~ " * 32
         puts "~                                                             ~"
-        puts "Hi, #{name}!"
-        puts "~                                                             ~"
-        puts "~" + "  " * 7 + "\u{1F52E}   Welcome to Zodiac's Homepage  \u{1F52E}" + "  " * 7 + "~"
+        puts "~" + "  " * 7 + "\u{1F52E}   Welcome to Zodiac's Homepage  \u{1F52E}" + "  " * 6 + "~"
         puts "~                                                             ~"
         puts "~ " * 32
 

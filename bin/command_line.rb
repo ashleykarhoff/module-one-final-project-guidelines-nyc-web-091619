@@ -5,6 +5,10 @@ class CommandLine
         TTY::Prompt.new(active_color: :magenta)
     end
 
+    def sound_effect
+        pid = fork{ exec 'afplay', 'fantasy_sound_effect.mp3'}
+    end
+
     def typing_effect(string)
         string.split("").each do |c|
             print c 
@@ -32,6 +36,9 @@ class CommandLine
     end
 
     def greet
+        # Start sound effect
+        sound_effect
+
         # Print out a welcome message to the screen
         puts pastel.bright_magenta("                                                                                                                                         
 ZZZZZZZZZZZZZZZZZZZ          OOOOOOOOO          DDDDDDDDDDDDD             IIIIIIIIII                    AAA                            CCCCCCCCCCCCC

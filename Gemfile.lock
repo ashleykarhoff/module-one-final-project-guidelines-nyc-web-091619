@@ -64,6 +64,7 @@ PLATFORMS
 
 DEPENDENCIES
   gemoji
+  pastel
   pry
   require_all
   sinatra-activerecord

@@ -6,5 +6,6 @@ gem "sqlite3", '~> 1.3.6'
 gem "pry"
 gem 'tty-prompt'
 gem 'gemoji'
+gem 'pastel'
 gem "require_all"
 
